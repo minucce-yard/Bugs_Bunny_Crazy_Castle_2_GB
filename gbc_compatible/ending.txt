@@ -1,0 +1,42 @@
+/*
+	Code should be used only for educational, documentation and modding purposes
+*/
+
+
+org 0x1793, 0x0
+
+	ld hl, ending_palette
+	ld de, 0xce00
+	ld bc, 0x0180
+	call ending_scene
+
+
+	call 0x00e1						; upload palette
+	; call 0x0484					; black screen
+
+	call 0x1b07						; ending tiles
+	call 0x792a						; ending map
+
+warnpc 0x17a8
+
+
+
+; #######################################################
+; #######################################################
+
+
+
+.relativeinclude off
+
+
+org 0x7e80, 0x1
+
+
+ending_palette:
+	.incbin "gbc_compatible/ending_pal.bin"
+
+
+warnpc 0x7f00
+
+
+.relativeinclude on

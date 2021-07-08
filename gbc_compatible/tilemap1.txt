@@ -1,0 +1,60 @@
+/*
+	Code should be used only for educational, documentation and modding purposes
+*/
+
+
+	ld a, (de)
+	push af
+
+	bit 7, a
+	jr nz, @@exit
+
+
+	ldh a, (0x40)
+	bit 4, a
+	jr nz, @@exit
+
+
+; =========================================
+; =========================================
+
+
+@@write:
+	ld a, (de)
+	push hl
+
+	ld h, 0xce
+	set 7, a
+	ld l, a
+
+	ld a, 0x01					; vram 1
+	ldh (0x4f), a
+
+
+	ld a, (hl)
+	pop hl
+
+	call wait_blank_af
+	ld (hl), a
+
+
+	xor a						; vram 0
+	ldh (0x4f), a
+
+
+; =========================================
+; =========================================
+
+
+@@exit:
+	cp a, 0xff
+	jr z, @@write
+
+
+	pop af
+
+	call wait_blank_af
+	ldi (hl), a
+
+	inc de
+	ret

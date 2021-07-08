@@ -1,0 +1,234 @@
+/*
+	Code should be used only for educational, documentation and modding purposes
+*/
+
+
+;
+;  Palette uploading
+;
+
+
+org 0x00a7, 0x0
+	ld c, 0x40					; size
+
+	ld a, b						; 00 = white
+	or a
+	jr z, @vram_white
+
+	dec a						; 01, 03 = copy
+	dec a						; 02 = black
+	jr z, @vram_black
+
+
+
+@vram_copy:
+	call wait_blank
+
+	ld a, (de)
+	ld (hl), a
+
+	inc e
+	dec c
+
+	jr nz, @vram_copy
+	ret
+
+
+; ==========================================================
+; ==========================================================
+
+
+@vram_white:
+	ld d, 0xff
+	jr @vram_fill
+
+
+
+@vram_black:
+	ld d, a
+
+
+; ==========================================================
+; ==========================================================
+
+
+@vram_fill:
+	call wait_blank
+	ld (hl), a
+
+	dec c
+	jr nz, @vram_fill
+
+	ret
+
+
+warnpc 0x00c9
+
+
+
+; ########################################################
+; ########################################################
+
+
+
+org 0x0c11, 0x0
+	ld bc, 0xc140 :: call @update1
+	ld bc, 0xc160 :: call @update1
+	ld bc, 0xc180 :: call @update2
+	ld bc, 0xc1a0 :: call @update3
+
+	ld bc, 0xc1c0 :: call @update1
+	ld bc, 0xc1e0 :: call @update1
+	ld bc, 0xc200 :: call @update2
+
+	ld bc, 0xc220 :: call @update1
+	ld bc, 0xc240 :: call @update3
+
+	call 0x11e5
+	call 0x0adc
+
+	ret
+
+
+
+; ///////////////////////////////////////////////////////
+; ///////////////////////////////////////////////////////
+
+
+
+@update1:
+	ld a, (bc)
+	add a, a
+	ret nc
+
+
+	call 0x0cc6
+	call 0x0ce8
+	call 0x0d4e
+	call 0x0cd8
+
+	ret
+
+
+
+; ///////////////////////////////////////////////////////
+; ///////////////////////////////////////////////////////
+
+
+
+@update2:
+	ld a, (bc)
+	add a, a
+	ret nc
+
+
+	call 0x0cc6
+	call 0x0da1
+	call 0x0e54
+	call 0x0cd8
+
+	ret
+
+
+
+; ///////////////////////////////////////////////////////
+; ///////////////////////////////////////////////////////
+
+
+
+@update3:
+	ld a, (bc)
+	add a, a
+	ret nc
+
+
+	call 0x0cc6
+	call 0x0e7c
+	call 0x0cd8
+
+	ret
+
+
+
+; ///////////////////////////////////////////////////////
+; ///////////////////////////////////////////////////////
+
+
+
+wait_blank:
+	ldh a, (0x41)
+	and a, 0x02
+	jr nz, wait_blank
+
+	ret
+
+
+
+; ///////////////////////////////////////////////////////
+; ///////////////////////////////////////////////////////
+
+
+
+wait_blank_af:
+	push af
+
+
+@@loop:
+	ldh a, (0x41)
+	and a, 0x02
+	jr nz, @@loop
+
+	pop af
+	ret
+
+
+
+; ///////////////////////////////////////////////////////
+; ///////////////////////////////////////////////////////
+
+
+
+boot_start:
+	ld hl, 0xce80				; wipe ram
+	ld bc, 0x0080
+	call 0x042a
+
+
+	jp 0x00c9
+
+
+
+; ////////////////////////////////////////////////////////
+; ////////////////////////////////////////////////////////
+
+
+
+ending_scene:
+	ldi a, (hl)
+	ld (de), a
+
+	dec c
+	inc e
+	jr nz, ending_scene
+
+
+; =========================================================
+; =========================================================
+
+
+	ld hl, 0xce80				; mono tilemap kludge
+	ld c, 0x80
+	ld a, 0x01
+
+
+@@loop:
+	ldi (hl), a
+
+	dec c
+	jr nz, @@loop
+
+	ret
+
+
+
+freepc 0x0cc6
