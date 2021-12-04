@@ -33,7 +33,7 @@ org 0x7e80, 0x1
 
 
 ending_palette:
-	.incbin "gbc_compatible/ending_pal.bin"
+	.incbin "gbc_compatible/ending/palette.bin"
 
 
 warnpc 0x7f00

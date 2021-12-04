@@ -1,0 +1,57 @@
+/*
+	Code should be used only for educational, documentation and modding purposes
+*/
+
+
+org 0x7d20, 0x1
+
+	.include "tilemap1.txt"
+
+warnpc 0x7d50
+
+
+
+org 0x7d50, 0x1
+
+	.include "tilemap2.txt"
+
+warnpc 0x7d7d
+
+
+; ====================================================
+; ====================================================
+
+
+org 0x7d20, 0x5
+	.include "tilemap1.txt"
+
+
+
+org 0x7d50, 0x5
+	.include "tilemap2.txt"
+
+
+; ====================================================
+; ====================================================
+
+
+org 0x7d20, 0x6
+	.include "tilemap1.txt"
+
+
+
+org 0x7d50, 0x6
+	.include "tilemap2.txt"
+
+
+; ====================================================
+; ====================================================
+
+
+org 0x7d20, 0x7
+	.include "tilemap1.txt"
+
+
+
+org 0x7d50, 0x7
+	.include "tilemap2.txt"

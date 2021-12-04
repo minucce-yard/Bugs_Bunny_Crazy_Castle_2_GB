@@ -6,7 +6,9 @@
 .relativeinclude on
 
 	.include "palette.txt"
-	.include "ending.txt"
+	.include "ending/main.txt"
+	.include "tilemap/main.txt"
+	.include "fade_screen/main.txt"
 
 .relativeinclude off
 
@@ -14,16 +16,6 @@
 
 ; #######################################################
 ; #######################################################
-
-
-
-org 0x00dd, 0x0
-	ld hl, 0x0150				; program start
-
-
-
-; ///////////////////////////////////////////////////////
-; ///////////////////////////////////////////////////////
 
 
 
@@ -41,61 +33,12 @@ warnpc 0x0104
 
 
 
-.relativeinclude on
+org 0x20d0, 0x0
 
+bank_swap_safe:
+	ldh (0xd6),a			; interrupt fix
+	ld (0x2000), a
 
-org 0x7d20, 0x1
+	ret
 
-	.include "tilemap1.txt"
-
-warnpc 0x7d50
-
-
-
-org 0x7d50, 0x1
-
-	.include "tilemap2.txt"
-
-warnpc 0x7d7d
-
-
-; ====================================================
-; ====================================================
-
-
-org 0x7d20, 0x5
-	.include "tilemap1.txt"
-
-
-
-org 0x7d50, 0x5
-	.include "tilemap2.txt"
-
-
-; ====================================================
-; ====================================================
-
-
-org 0x7d20, 0x6
-	.include "tilemap1.txt"
-
-
-
-org 0x7d50, 0x6
-	.include "tilemap2.txt"
-
-
-; ====================================================
-; ====================================================
-
-
-org 0x7d20, 0x7
-	.include "tilemap1.txt"
-
-
-
-org 0x7d50, 0x7
-	.include "tilemap2.txt"
-
-
-.relativeinclude off
+warnpc 0x20d6

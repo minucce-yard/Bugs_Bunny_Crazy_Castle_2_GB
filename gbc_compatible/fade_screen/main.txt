@@ -1,0 +1,261 @@
+/*
+	Code should be used only for educational, documentation and modding purposes
+*/
+
+
+org 0x5438, 0x01
+
+	or a
+	jr z, @fade_1
+
+	cp a, 0x08
+	jr z, @fade_2
+
+	cp a, 0x10
+	jp z, write_white_palette
+
+	cp a, 0x18
+	jp z, write_white_palette
+
+	cp a, 0x20
+	jp z, write_white_palette
+
+	cp a, 0x28
+	jr z, @fade_2
+
+	cp a, 0x30
+	jr z, @fade_1
+
+	cp a, 0x38
+	jp z, 0x0477				; normal palette
+
+	ret
+
+
+
+; /////////////////////////////////////////////////////////////
+; /////////////////////////////////////////////////////////////
+
+
+
+@fade_1:
+	ld hl, @fade_white1
+	push hl
+
+	ld a, int(orga(@fade_white1) / 0x4000)
+	jp bank_swap_safe
+
+
+; -------------------------------------------------------------
+; -------------------------------------------------------------
+
+
+@fade_2:
+	ld hl, @fade_white2
+	push hl
+
+	ld a, int(orga(@fade_white2) / 0x4000)
+	jp bank_swap_safe
+
+
+warnpc 0x5472
+
+
+
+; ##############################################################
+; ##############################################################
+
+
+
+org 0x7700, 0x06
+
+
+@fade_white1:
+	ld hl, @white_bgp_table1
+	call @fade_white_bgp_copy
+
+
+; ------------------------------------------------------------
+; ------------------------------------------------------------
+
+
+	ld hl, @white_obj_table1
+	call @fade_white_obj1_copy
+
+
+	ld hl, @white_obj_table1a
+	ld bc, 0x206b
+	call @copy_table
+
+
+; ------------------------------------------------------------
+; ------------------------------------------------------------
+
+
+	ld a, 0x01
+	jp bank_swap_safe
+
+
+
+; /////////////////////////////////////////////////////////////
+; /////////////////////////////////////////////////////////////
+
+
+
+@fade_white2:
+	ld hl, @white_bgp_table2
+	call @fade_white_bgp_copy
+
+
+; ------------------------------------------------------------
+; ------------------------------------------------------------
+
+
+	ld hl, @white_obj_table2
+	call @fade_white_obj1_copy
+
+
+	ld hl, @white_obj_table2a
+	ld bc, 0x206b
+	call @copy_table
+
+
+; ------------------------------------------------------------
+; ------------------------------------------------------------
+
+
+	ld a, 0x01
+	jp bank_swap_safe
+
+
+
+; /////////////////////////////////////////////////////////////
+; /////////////////////////////////////////////////////////////
+
+
+
+@fade_white_bgp_copy:
+	ld a, 0x80					; bgp 0
+	ldh (0x68), a
+
+
+	ld a, (0xc388)				; palette #  (0-6 * $40)
+	rra
+	rra
+	rra
+	ld c, a
+
+	rla
+	and a, 0x01
+	ld b, a
+
+	add hl, bc
+
+
+	ld bc, 0x4069
+	call @copy_table
+
+
+	ret
+
+
+
+; /////////////////////////////////////////////////////////////
+; /////////////////////////////////////////////////////////////
+
+
+
+@fade_white_obj1_copy:
+	ld a, 0x88					; obj 1
+	ldh (0x6a), a
+
+
+	ld a, (0xc3b1)				; palette #  (3-6 * $20)
+	sub a, 0x03
+	rrca
+	rrca
+	rrca
+	ld c, a
+
+	ld b, 0x00
+	add hl, bc
+
+
+	ld bc, 0x206b
+	call @copy_table
+
+
+	ret
+
+
+
+; /////////////////////////////////////////////////////////////
+; /////////////////////////////////////////////////////////////
+
+
+
+@copy_table:
+	call wait_blank
+
+	ldi a, (hl)
+	ld (c), a
+
+	dec b
+	jr nz, @copy_table
+
+
+	ret
+
+
+
+; //////////////////////////////////////////////////////////////
+; //////////////////////////////////////////////////////////////
+
+
+
+.relativeinclude off
+
+
+@white_bgp_table1:
+	.incbin "gbc_compatible/fade_screen/bgp_white_1.bin"
+
+
+@white_bgp_table2:
+	.incbin "gbc_compatible/fade_screen/bgp_white_2.bin"
+
+
+; --------------------------------------------------------------
+; --------------------------------------------------------------
+
+
+@white_obj_table1:
+	.incbin "gbc_compatible/fade_screen/obj_white_1b.bin"
+
+
+@white_obj_table1a:
+	.incbin "gbc_compatible/fade_screen/obj_white_1c.bin"
+	.incbin "gbc_compatible/fade_screen/obj_white_1a.bin"
+
+
+; --------------------------------------------------------------
+; --------------------------------------------------------------
+
+
+@white_obj_table2:
+	.incbin "gbc_compatible/fade_screen/obj_white_2b.bin"
+
+
+@white_obj_table2a:
+	.incbin "gbc_compatible/fade_screen/obj_white_2c.bin"
+	.incbin "gbc_compatible/fade_screen/obj_white_2a.bin"
+
+
+; --------------------------------------------------------------
+; --------------------------------------------------------------
+
+
+
+.relativeinclude on
+
+
+warnpc 0x7d00

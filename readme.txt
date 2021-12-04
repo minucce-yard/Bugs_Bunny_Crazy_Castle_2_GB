@@ -1,8 +1,8 @@
-Bugs Bunny Crazy Castle 2 DX - GBC Compatible
+Bugs Bunny Crazy Castle 2 DX - Fluffy Repair Service
 
 
 Latest:
-2021-10-21
+2021-12-03
 
 
 
@@ -12,14 +12,18 @@ Latest:
 
 Bugs Bunny Crazy Castle 2 DX  (FroggestSpirit):
 
--  Original Bugs Bunny Crazy Castle 2, The (USA) rom
+
+0) Use original rom
+   Bugs Bunny Crazy Castle 2, The (USA).gb
 
 
--  Apply patch 1.0
+
+1) Apply patch 1.0
    https://www.romhacking.net/hacks/944/
 
 
-   Then dx_basic.ips
+
+2) Then dx_basic.ips
 
 
 
@@ -34,7 +38,8 @@ gbc_compatible
 
 *  Fixes vram graphics corruption
    Fixes missing ending scene
-
+   Fixes missing warp fade effect
+   Fixes black flicker
 
 
 _______________________________________________
@@ -42,6 +47,12 @@ _______________________________________________
 
 
 Commits:
+
+2 - gbc_compatible updated
+
+    *  warp fade effect
+    *  black flicker
+
 
 
 1 - gbc_compatible released
@@ -56,6 +67,9 @@ Visit:
 *  Source Code
    https://github.com/minucce-yard/Bugs_Bunny_Crazy_Castle_2_GB
 
+
+*  Discuss
+   https://www.romhacking.net/forum/index.php?topic=33527.0
 
 
 _______________________________________________
